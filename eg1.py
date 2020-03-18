@@ -3,26 +3,27 @@ import numpy as np
 
 print("Enter a Sequence\n")
 inputstr = input()
-print(inputstr + "\n")
+# print(inputstr + "\n")
 
 res = Counter(inputstr)  # 统计输入的每个字符的个数,res是一个字典类型
-print(str(res))
-# print(res)
+print(res)
 # sortlist = sorted(res.iteritems(), lambda x, y : cmp(x[1], y[1]), reverse = True)
 # print sortlist
 
 M = len(res)
-# print (M)
+# print(M)
 N = 5
 A = np.zeros((M, 5), dtype=object)  # 生成M行5列全0矩阵
 
 # A = [[0 for i in range(N)] for j in range(M)]
 
 reskeys = list(res.keys())      # 取字典res的键,按输入符号的先后顺序排列
-# print(reskeys)
+print("keys:"+str(reskeys))
 resvalue = list(res.values())   # 取字典res的值
-totalsum = sum(resvalue)        # 输入一共有几个字符
-
+print("value:"+str(resvalue))
+# totalsum = sum(resvalue)        # 输入一共有几个字符
+totalsum = len(inputstr)
+print("totalvalue:"+str(totalsum))
 # Creating Table
 
 A[M-1][3] = 0
@@ -49,13 +50,20 @@ UEnco.append(1)
 
 for i in range(len(strlist)):
     result = np.where(A == reskeys[reskeys.index(strlist[i])])           # 满足条件返回数组下标(0,0),(1,0)
+    # print(result)
     addtollist = (LEnco[i] + (UEnco[i] - LEnco[i])*float(A[result[0], 3]))
     addtoulist = (LEnco[i] + (UEnco[i] - LEnco[i])*float(A[result[0], 4]))
 
     LEnco.append(addtollist)
     UEnco.append(addtoulist)
 
-    tag = (LEnco[-1] + UEnco[-1])/2.0           # 最后取区间的中点输出
+    # tag = (LEnco[-1] + UEnco[-1])/2.0           # 最后取区间的中点输出
+    s1 = str(LEnco[-1])
+    s2 = str(UEnco[-1])
+    for i in range(len(s1)):
+        if(s1[i] != s2[i]):
+            tag = float(s2[0:i+1])
+            break
 
 LEnco.insert(0, " Lower Range")
 UEnco.insert(0, "Upper Range")
@@ -69,11 +77,10 @@ print("\n------- DECODING -------\n")
 ltag = 0
 utag = 1
 decodedSeq = []
-for i in range(len(inputstr)):
+for i in range(totalsum):
     numDeco = ((tag - ltag)*1.0)/(utag - ltag)    # 计算tag所占整个区间的比例
     for i in range(M):
         if (float(A[i, 3]) < numDeco < float(A[i, 4])):   # 判断是否在某个符号区间范围内
-
             decodedSeq.append(str(A[i, 0]))
             ltag = float(A[i, 3])
             utag = float(A[i, 4])
