@@ -1,8 +1,7 @@
 from collections import Counter  # 统计列表出现次数最多的元素
 import numpy as np
-import decimal
 
-print("Input:\n")
+print("Enter a Sequence\n")
 inputstr = input()
 # print(inputstr + "\n")
 
@@ -11,6 +10,8 @@ res = Counter(inputstr)  # 统计输入的每个字符的个数,res是一个字�
 
 M = len(res)
 # print(M)
+N = 5
+A = np.zeros((M, 5), dtype=object)  # 生成M行5列全0矩阵
 
 reskeys = list(res.keys())      # 取字典res的键,按输入符号的先后顺序排列
 # print("keys:"+str(reskeys))
@@ -20,22 +21,16 @@ resvalue = list(res.values())   # 取字典res的值
 totalsum = len(inputstr)
 # print("totalvalue:"+str(totalsum))
 # Creating Table
-percentage = list(res.values())
-temptotal = decimal.Decimal(totalsum)
-tempresval = list(res.values())
 for i in range(M):
-    tempresval[i] = decimal.Decimal(resvalue[i])
-    percentage[i] = tempresval[i]/temptotal
-left = []
-right = []
-left.append(decimal.Decimal(0))
-right.append(percentage[0])
-# left[0] = 0.0
-# right[0] = percentage[0]
+    A[i][0] = reskeys[i]      # 第一列是res的键
+    A[i][1] = resvalue[i]     # 第二列是res的值
+    A[i][2] = ((resvalue[i]*1.0)/totalsum)    # 第三列是每个字符出现的概率
+A[0][3] = 0
+A[0][4] = A[0][2]
 i = 1
 while i < M:
-    left.append(right[i-1])
-    right.append(left[i] + percentage[i])
+    A[i][3] = A[i-1][4]
+    A[i][4] = A[i][3] + A[i][2]
     i += 1
 # print(A)
 
@@ -43,41 +38,41 @@ while i < M:
 
 print("\n------- ENCODING -------\n")
 strlist = list(inputstr)
-ltag = decimal.Decimal('0')
-utag = decimal.Decimal('1')
+ltag = 0.0
+utag = 1.0
 index = 0
-r = decimal.Decimal(1)
+r = 1.0
 for i in range(len(strlist)):
     for j in range(M):
-        if(strlist[i] == reskeys[j]):
+        if(strlist[i] == A[j][0]):
             index = j
             break
     r = utag - ltag
-    utag = right[index] * r + ltag
-    ltag = left[index] * r + ltag
-tag = (ltag + utag)/decimal.Decimal(2)
+    utag = A[index][4] * r * 1.0+ltag
+    ltag = A[index][3] * r * 1.0+ltag
 s1 = str(ltag)
 s2 = str(utag)
 for i in range(len(s1)):
     if(s1[i] != s2[i]):
-        tag = decimal.Decimal(s2[0:i+1])
+        tag = float(s2[0:i+1])
         break
+# tag = (ltag + utag)/2.0
 print("\nThe Tag is \n ")
 print(tag)
 
 # Decoding
 
 print("\n------- DECODING -------\n")
-ltag = decimal.Decimal('0')
-utag = decimal.Decimal('1')
+ltag = 0.0
+utag = 1.0
 ret = []
 for i in range(totalsum):
-    temp = (tag - ltag)/(utag - ltag)    # 计算tag所占整个区间的比例
+    temp = ((tag - ltag)*1.0)/(utag - ltag)    # 计算tag所占整个区间的比例
     for j in range(M):
-        if (float(left[j]) < temp < float(right[j])):   # 判断是否在某个符号区间范围内
-            ret.append(str(reskeys[j]))
-            ltag = left[j]
-            utag = right[j]
+        if (float(A[j, 3]) < temp < float(A[j, 4])):   # 判断是否在某个符号区间范围内
+            ret.append(str(A[j, 0]))
+            ltag = float(A[j, 3])
+            utag = float(A[j, 4])
             tag = temp
 
 print("The decoded Sequence is \n ")

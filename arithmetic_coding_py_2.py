@@ -10,7 +10,7 @@ res = Counter(inputstr)  # 统计输入的每个字符的个数,res是一个字�
 
 M = len(res)
 # print(M)
-N = 5
+# N = 5
 # A = np.zeros((M, 5), dtype=object)  # 生成M行5列全0矩阵
 
 reskeys = list(res.keys())      # 取字典res的键,按输入符号的先后顺序排列
