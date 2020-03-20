@@ -13,7 +13,7 @@ print(res)
 M = len(res)
 # print(M)
 N = 5
-A = np.zeros((M, 5), dtype=object)  # 生成M行5列全0矩阵
+A = np.zeros((M, N), dtype=object)  # 生成M行5列全0矩阵
 
 # A = [[0 for i in range(N)] for j in range(M)]
 
