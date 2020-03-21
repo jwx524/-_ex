@@ -1,6 +1,9 @@
 from collections import Counter  # 统计列表出现次数最多的元素
 import numpy as np
 import decimal
+import operator
+
+decimal.getcontext().prec = 1000
 
 print("Input:\n")
 inputstr = input()
@@ -41,7 +44,7 @@ while i < M:
 
 # Encoding
 
-print("\n------- ENCODING -------\n")
+# print("\n------- ENCODING -------\n")
 strlist = list(inputstr)
 ltag = decimal.Decimal('0')
 utag = decimal.Decimal('1')
@@ -62,12 +65,13 @@ for i in range(len(s1)):
     if(s1[i] != s2[i]):
         tag = decimal.Decimal(s2[0:i+1])
         break
-print("\nThe Tag is \n ")
+# print("\nThe Tag is \n ")
+print("\nCode:\n")
 print(tag)
 
 # Decoding
 
-print("\n------- DECODING -------\n")
+# print("\n------- DECODING -------\n")
 ltag = decimal.Decimal('0')
 utag = decimal.Decimal('1')
 ret = []
@@ -80,5 +84,11 @@ for i in range(totalsum):
             utag = right[j]
             tag = temp
 
-print("The decoded Sequence is \n ")
+# print("The decoded Sequence is \n ")
+print("\nDecoded Sequence:\n")
 print("".join(ret))
+
+if(operator.eq(ret, strlist)):
+    print("\nCorrect.")
+else:
+    print("\nWrong.")
