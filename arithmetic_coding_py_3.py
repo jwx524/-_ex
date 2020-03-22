@@ -1,5 +1,4 @@
 from collections import Counter  # 统计列表出现次数最多的元素
-import numpy as np
 import decimal
 import operator
 
