@@ -15,13 +15,15 @@ c = np.cov(data)
 # print(c)
 w, v = np.linalg.eig(c)
 sort_w = -np.sort(-w)
+print("特征值序列为：")
+print(sort_w)
 sort_index = np.argsort(-w)
 n = v.shape[1]
 m = v.shape[0]
-p = v[:, sort_index[0]].reshape(m, 1)
+p = v[:, sort_index[0]].reshape(1, n)
 i = 1
-while i < n:
-    p = np.concatenate((p, v[:, sort_index[i]].reshape(m, 1)), axis=1)
+while i < 2:
+    p = np.concatenate((p, v[:, sort_index[i]].reshape(1, n)), axis=0)
     i += 1
 print("变换矩阵为：")
 print(p)
