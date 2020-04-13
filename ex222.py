@@ -16,7 +16,7 @@ def dist(x, y):
 
 e = 0.01
 N = 1
-Nmax = 2**14
+Nmax = 2**8
 m, n = data.shape
 c = np.zeros((Nmax+1, n))
 c[1] = np.mean(data, axis=0)
@@ -53,8 +53,7 @@ while N < Nmax:
             c[l+1, :] = np.mean(pointsInCluster, axis=0)
         D1 = 0
         for i in range(m):
-            index = int(cluster[i, 0])
-            D1 += dist(c[index], data[i, :])
+            D1 += cluster[i, 1]
         D1 = 1.0 * D1 / m
         if (((D - D1) * 1.0 / D) <= e):
             change = False
